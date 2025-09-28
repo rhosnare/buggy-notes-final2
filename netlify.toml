@@ -1,0 +1,12 @@
+# netlify.toml
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Nonaktifkan auto-update saat build untuk stabilitas
+  NPM_FLAGS = "--no-optional"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
