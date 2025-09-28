@@ -1,11 +1,9 @@
-# netlify.toml
-
 [build]
   command = "npm run build"
   publish = ".next"
 
 [build.environment]
-  # Nonaktifkan auto-update saat build untuk stabilitas
+  NODE_VERSION = "20"
   NPM_FLAGS = "--no-optional"
 
 [[plugins]]
