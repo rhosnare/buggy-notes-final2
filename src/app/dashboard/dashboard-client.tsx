@@ -7,12 +7,11 @@ import { type Note } from '@/lib/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FileText, PlusCircle } from 'lucide-react'
 import MotivationalQuote from './motivational-quote'
-import { type User } from '@supabase/supabase-js' // ✨ PASTIKAN INI ADA ✨
+import { type User } from '@supabase/supabase-js'
 
-// ✨ INI BAGIAN UTAMA YANG PERLU DIPASTIKAN SUDAH BENAR ✨
 interface DashboardClientProps {
   initialNotes: Note[]
-  currentUser: User | null // <--- PASTIKAN INI ADA DAN TEPAT
+  currentUser: User | null
 }
 
 export default function DashboardClient({ initialNotes, currentUser }: DashboardClientProps) {
@@ -105,10 +104,9 @@ export default function DashboardClient({ initialNotes, currentUser }: Dashboard
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         {/* Kutipan Motivasi */}
-        <Card className="lg:col-span-4 h-[350px]">
-            <CardContent className="h-full p-6">
-                <MotivationalQuote />
-            </CardContent>
+        {/* ✨ PERUBAHAN DI SINI: Hapus CardContent, tambahkan kelas ✨ */}
+        <Card className="lg:col-span-4 h-[350px] overflow-hidden p-0 border-none shadow-none">
+            <MotivationalQuote />
         </Card>
         
         {/* Daftar Catatan Terbaru */}
