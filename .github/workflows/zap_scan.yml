@@ -3,16 +3,26 @@ name: OWASP ZAP Scan
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * 0' # Setiap hari Minggu
+    - cron: '0 0 * * 0' # Setiap hari Minggu pukul 00:00 UTC
 
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
-    name: Scan Buggy Notes App
+    name: ZAP Baseline Scan for Buggy Notes
+
+    # ✨ INI PENTING: Tambahkan izin untuk bot GitHub Actions ✨
+    permissions:
+      issues: write # Memungkinkan bot untuk membuat/mengedit issue
+      contents: read # Izin membaca konten repo (biasanya default tapi eksplisit lebih baik)
+
     steps:
+      - name: Checkout Code (Opsional, jika ZAP perlu mengakses file lokal)
+        uses: actions/checkout@v4
+
       - name: ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
           target: "https://buggy-notes1.netlify.app/"
-          # Gunakan tanda hubung atau garis bawah
-          artifact_name: "zap-scan-report"
+          # Nama artifak yang valid, tidak ada spasi
+          artifact_name: "zap-baseline-report" 
+          
