@@ -1,37 +1,15 @@
 name: OWASP ZAP Scan
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # manual trigger
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: '0 0 * * 0'  # tiap minggu
 
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
-    name: ZAP Baseline Scan for Buggy Notes
-    permissions:
-      issues: write # Tetap butuh untuk membuat GitHub Issue
-      contents: write # Dibutuhkan untuk upload artifak dengan actions/upload-artifact
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
       - name: ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@v0.9.0
         with:
-          target: "https://buggy-notes1.netlify.app/"
-          # ✨ Hapus 'artifact_name' dari action ZAP, biarkan dia TIDAK mengupload ✨
-          # issue_title: "ZAP Scan Baseline Report" # Biarkan ini jika ingin buat issue
-          
-      # ✨ LANGKAH BARU: Upload Artifak secara Manual ✨
-      - name: Upload ZAP Report Artifact
-        uses: actions/upload-artifact@v4 # Gunakan versi terbaru
-        with:
-          name: zap-baseline-report-bundle # Nama artifak yang valid
-          path: |
-            report_json.json
-            report_md.md
-            report_html.html
-          # Tambahkan opsi retention-days jika ingin membatasi berapa lama artifak disimpan
-          # retention-days: 7
+          target: "https://buggy-notes1.netlify.app/login"
