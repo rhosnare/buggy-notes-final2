@@ -10,33 +10,38 @@ jobs:
     runs-on: ubuntu-latest
     name: ZAP Baseline Scan for Buggy Notes
 
-    # ✨ INI PENTING DAN SERING TERLUPAKAN: Tambahkan blok permissions ini ✨
+    # ✨ PASTIKAN BLOK PERMISSIONS INI ADA DAN BENAR ✨
     permissions:
-      issues: write   # Mengizinkan bot membuat/mengedit GitHub Issues
-      contents: write # Dibutuhkan oleh actions/upload-artifact@v4 (jika Anda ingin mengupload artifak)
-      # contents: read # Bisa juga hanya read jika tidak perlu upload, tapi write lebih aman untuk actions/upload-artifact
+      issues: write   # Untuk membuat GitHub Issue (SUDAH BERHASIL!)
+      contents: write # PENTING: Dibutuhkan oleh actions/upload-artifact@v4 untuk mengupload artifak
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.12.0 # ✨ REKOMENDASI KUAT: Gunakan VERSI TERBARU ✨
+        uses: zaproxy/action-baseline@v0.12.0 # ✨ TETAP GUNAKAN VERSI TERBARU (v0.12.0) ✨
         with:
-          target: "https://buggy-notes1.netlify.app/login" # Target yang lebih baik
-          # Hapus 'artifact_name' dari sini karena akan diupload terpisah
+          target: "https://buggy-notes1.netlify.app/login"
           
-          # Biarkan ini jika Anda ingin ZAP membuat GitHub Issue
+          # ✨ HAPUS SAMA SEKALI parameter 'artifact_name' dari sini ✨
+          # Ini akan mencegah action ZAP mencoba mengupload artifak sendiri
+          
+          # Biarkan ini jika Anda ingin ZAP membuat GitHub Issue (sudah berhasil!)
           issue_title: "ZAP Scan Baseline Report"
+          
+          # Tambahan: Jika Anda ingin lebih eksplisit agar ZAP tidak mengupload artifak sama sekali,
+          # Anda bisa mencoba parameter 'upload_artifact': 'false' atau sejenisnya
+          # Namun, umumnya, jika artifact_name tidak ada, ia akan menggunakan nama job.
+          # Menghapus artifact_name adalah cara yang paling langsung untuk menghentikan upaya upload-nya.
 
-      # ✨ Tambahkan step ini untuk upload artifak secara mandiri ✨
-      # Ini akan mengatasi masalah 400 Bad Request sebelumnya
+      # ✨ INI CRITICAL: Step terpisah untuk upload artifak ✨
       - name: Upload ZAP Report Artifact
-        uses: actions/upload-artifact@v4 # Gunakan action upload resmi GitHub
+        uses: actions/upload-artifact@v4 # Ini adalah action upload resmi GitHub yang stabil
         with:
-          name: zap-login-page-report # Nama artifak yang spesifik dan valid
+          name: zap-login-page-report    # Nama artifak yang JELAS dan VALID (tanpa spasi)
           path: |
             report_json.json
             report_md.md
             report_html.html
-          # retention-days: 7 # Opsional: Berapa hari artifak akan disimpan
+          # retention-days: 7 # Opsional: Berapa hari artifak akan disimpan di GitHub
