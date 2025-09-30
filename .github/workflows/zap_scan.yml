@@ -8,8 +8,35 @@ on:
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
+    name: ZAP Baseline Scan for Buggy Notes
+
+    # ✨ INI PENTING DAN SERING TERLUPAKAN: Tambahkan blok permissions ini ✨
+    permissions:
+      issues: write   # Mengizinkan bot membuat/mengedit GitHub Issues
+      contents: write # Dibutuhkan oleh actions/upload-artifact@v4 (jika Anda ingin mengupload artifak)
+      # contents: read # Bisa juga hanya read jika tidak perlu upload, tapi write lebih aman untuk actions/upload-artifact
+
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.9.0
+        uses: zaproxy/action-baseline@v0.12.0 # ✨ REKOMENDASI KUAT: Gunakan VERSI TERBARU ✨
         with:
-          target: "https://buggy-notes1.netlify.app/login"
+          target: "https://buggy-notes1.netlify.app/login" # Target yang lebih baik
+          # Hapus 'artifact_name' dari sini karena akan diupload terpisah
+          
+          # Biarkan ini jika Anda ingin ZAP membuat GitHub Issue
+          issue_title: "ZAP Scan Baseline Report"
+
+      # ✨ Tambahkan step ini untuk upload artifak secara mandiri ✨
+      # Ini akan mengatasi masalah 400 Bad Request sebelumnya
+      - name: Upload ZAP Report Artifact
+        uses: actions/upload-artifact@v4 # Gunakan action upload resmi GitHub
+        with:
+          name: zap-login-page-report # Nama artifak yang spesifik dan valid
+          path: |
+            report_json.json
+            report_md.md
+            report_html.html
+          # retention-days: 7 # Opsional: Berapa hari artifak akan disimpan
